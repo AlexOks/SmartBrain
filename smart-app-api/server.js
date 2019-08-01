@@ -1,12 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const cors = require('cors');
 
 const saltRounds = 10;
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(cors());
 const database = {
     users: [
         {
@@ -49,7 +51,7 @@ app.post('/signin', (req, res) => {
     if (req.body.email === database.users[0].email && req.body.password === database.users[0].password) {
         res.json('success')
     } else {
-        res.status(400).json('error logging in')
+        res.status(400).json('error logging in');
     }
 })
 
