@@ -1,5 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+
+const saltRounds = 10;
 
 const app = express();
 
@@ -22,6 +25,13 @@ const database = {
             entries: 0,
             joined: new Date()
         }
+    ],
+    login: [
+        {
+            id: '987',
+            hash: '',
+            email: 'alex@gmail.com'
+        }
     ]
 }
 
@@ -30,6 +40,12 @@ app.get('/', (req, res) =>{
 })
 
 app.post('/signin', (req, res) => {
+    bcrypt.compare('qwerty2', '$2b$10$S/keJFnYsJsPKagb0q97HOJirDa9LpQku4mdSnnkbkauGWKPSECo6', function(err, res) {
+       console.log('first guess', res)
+    });
+    bcrypt.compare('apples', '$2b$10$S/keJFnYsJsPKagb0q97HOJirDa9LpQku4mdSnnkbkauGWKPSECo6', function(err, res) {
+        console.log('second guess', res)
+    });
     if (req.body.email === database.users[0].email && req.body.password === database.users[0].password) {
         res.json('success')
     } else {
@@ -39,6 +55,9 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     const { email, name, password} = req.body;
+    //bcrypt.hash(password, saltRounds, function(err, hash) {
+        //console.log(hash);
+      //});
     database.users.push({
         id: '125',
         name: name,
@@ -78,6 +97,10 @@ app.put('/image', (req, res) => {
         res.status(404).json('not found');
     }
 })
+
+
+
+
 app.listen(3000, () => {
     console.log('api is run on port 3000');
 })
